@@ -63,6 +63,13 @@ APP_ENABLE = "/apps/{}/enable"
 APP_DISABLE = "/apps/{}/disable"
 APP_CHUNK_SIZE = 5242880
 
+# extractions related
+PATH_EXTRACTIONS_LIST = "/extractions/list"
+PATH_EXTRACTIONS = "/extractions"
+PATH_EXAMPLE_PREVIEW = "/example/preview"
+PATH_REGEX = "/regex"
+PATH_REGEX_CHECK = "/regex/check"
+
 
 def connect(**kwargs):
     return PandoraConnection(**kwargs)
@@ -503,6 +510,135 @@ class PandoraConnection(object):
                 fields["file"] = (basename, content, 'application/octet-stream')
                 self.request(method="POST", subpath=APP_IMPORT + "?" + urlencode(params), fields=fields)
         return True
+
+    def get_extractions_list(self, **page_params):
+        """
+        Get extractions list
+
+        :param sort: The sort column, updateTime by default
+        :type sort: ``string``
+        :param order: The order of data, asc or desc, desc by default
+        :type order: ``string``
+        :param pageNo: The page no, start from 1
+        :type pageNo: ``integer``
+        :param pageSize: The size of page, 10 by default
+        :type pageSize: ``integer``
+        :param prefix: The search keyword of repo name
+        :type prefix: ``string``
+        """
+        return self.get(PATH_EXTRACTIONS_LIST, page_params)
+
+    def get_extractions(self, **page_params):
+        """
+        Get extractions
+
+        :param name:extractions name
+        :type name:``string``
+        :param sourcetype:extractions sourcetype
+        :type sourcetype:``string``
+        """
+        return self.get(PATH_EXTRACTIONS, page_params)
+
+    def create_extractions_by_body(self, req_body):
+        return self.post(PATH_EXTRACTIONS, req_body)
+
+    def create_extractions(self, name, sourcetype, description="", type="regex",
+                          charset="utf-8", **kwargs):
+        """
+        :param name: The name of extractions
+        :type name: ``string``
+        :param sourcetype: the type of sourcetype
+        :type sourcetype: ``string``
+        :param description: The description of sourcetype
+        :type description : ``string``
+        :param type: The line type of data must in ["csv"，"json"，"regex","kv"]
+        :type type : ``string``
+        """
+        delimiter = kwargs.get("delimiter", "")
+        delimiterKv = kwargs.get("delimiterKv", "")
+        pattern = kwargs.get("pattern", "")
+        schemas_field = kwargs.get("schemas_field", "")
+        _ram = kwargs.get("_ram", "")
+        mark_start = kwargs.get("mark_start", "")
+        mark_end = kwargs.get("mark_end", "")
+        mark_field = kwargs.get("mark_field", "")
+        mark_value = kwargs.get("mark_value", "")
+
+        req_body = {
+            "name": name,
+            "sourcetype": sourcetype,
+            "description": description,
+            "type": type,
+            "config": {
+                "delimiter": delimiter,
+                "delimiterKv": delimiterKv,
+                "pattern": pattern
+            },
+            "schemas": [{
+                "field": schemas_field
+            }],
+            "example": {
+                "_ram": _ram,
+                "mark": [{
+                    "start": mark_start,
+                    "end": mark_end,
+                    "field": mark_field,
+                    "value": mark_value
+                }]}
+        }
+        return self.create_extractions_by_body(req_body)
+
+    def delete_extractions(self, **page_params):
+        return self.delete(PATH_EXTRACTIONS,page_params)
+
+    def get_example_by_body(self, req_body):
+        return self.post(PATH_EXTRACTIONS, req_body)
+
+    def get_extractions_example(self, name, sourcetype, description="", type="regex",
+                          charset="utf-8", **kwargs):
+        """
+        :param name: The name of extractions
+        :type name: ``string``
+        :param sourcetype: the type of sourcetype
+        :type sourcetype: ``string``
+        :param description: The description of sourcetype
+        :type description : ``string``
+        :param type: The line type of data must in ["csv"，"json"，"regex","kv"]
+        :type type : ``string``
+        """
+        delimiter = kwargs.get("delimiter", "")
+        delimiterKv = kwargs.get("delimiterKv", "")
+        pattern = kwargs.get("pattern", "")
+        schemas_field = kwargs.get("schemas_field", "")
+        _ram = kwargs.get("_ram", "")
+        mark_start = kwargs.get("mark_start", "")
+        mark_end = kwargs.get("mark_end", "")
+        mark_field = kwargs.get("mark_field", "")
+        mark_value = kwargs.get("mark_value", "")
+
+        req_body = {
+            "name": name,
+            "sourcetype": sourcetype,
+            "description": description,
+            "type": type,
+            "config": {
+                "delimiter": delimiter,
+                "delimiterKv": delimiterKv,
+                "pattern": pattern
+            },
+            "schemas": [{
+                "field": schemas_field
+            }],
+            "example": {
+                "_ram": _ram,
+                "mark": [{
+                    "start": mark_start,
+                    "end": mark_end,
+                    "field": mark_field,
+                    "value": mark_value
+                }]}
+        }
+        return self.create_extractions_by_body(req_body)
 
 
 def encode_json(data):
