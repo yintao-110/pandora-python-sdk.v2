@@ -9,7 +9,6 @@ mccabe
 numpy
 packaging
 pandas
-pdr-python-sdk
 pluggy
 py
 pycodestyle
@@ -25,3 +24,4 @@ toml
 urllib3
 wrapt
 codecov
+GitPython

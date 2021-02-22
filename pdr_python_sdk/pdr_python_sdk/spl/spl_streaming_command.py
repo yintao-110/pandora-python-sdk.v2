@@ -11,22 +11,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-
-class ServerError(RuntimeError):
-    pass
+from .spl_streaming_batch_command import SplStreamingBatchCommand
 
 
-class BadRequest(RuntimeError):
-    pass
-
-
-class NotFound(RuntimeError):
-    pass
-
-
-class RequestTooLarge(RuntimeError):
-    pass
-
-
-class IllegalArgument(RuntimeError):
+class SplStreamingCommand(SplStreamingBatchCommand):
     pass
