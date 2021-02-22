@@ -592,7 +592,7 @@ class PandoraConnection(object):
         return self.delete(PATH_EXTRACTIONS,page_params)
 
     def get_example_by_body(self, req_body):
-        return self.post(PATH_EXTRACTIONS, req_body)
+        return self.post(PATH_EXAMPLE_PREVIEW, req_body)
 
     def get_extractions_example(self, name, sourcetype, description="", type="regex",
                           charset="utf-8", **kwargs):
@@ -639,6 +639,58 @@ class PandoraConnection(object):
                 }]}
         }
         return self.create_extractions_by_body(req_body)
+
+    def get_regexp_by_body(self, req_body):
+        return self.post(PATH_REGEX, req_body)
+
+    def get_rxgexp(self, charset="utf-8", **kwargs):
+        """
+        :param _raw:
+        :type _raw: ``list``
+        :param schema_field:
+        :type schema_field: ``string``
+        :param start:
+        :type start : ``string``
+        :param end:
+        :type end : ``string``
+        """
+        _raw = kwargs.get("_raw", "")
+        schema_field = kwargs.get("schema_field", "")
+        start = kwargs.get("start", "")
+        end = kwargs.get("end", "")
+
+        req_body = {
+             "_raw": _raw,
+             "schema":[{
+                 "field": schema_field,
+                 "start": start,
+                 "end":end }
+        ]}
+        return self.get_regexp_by_body(req_body)
+
+    def get_regexp_check_by_body(self, req_body):
+        return self.post(PATH_REGEX_CHECK, req_body)
+
+    def get_rxgexp_check(self,pattern="pattern", charset="utf-8", **kwargs):
+        """
+        :param _raw:
+        :type _raw: ``list``
+        :param schema_field:
+        :type schema_field: ``string``
+        :param start:
+        :type start : ``string``
+        :param end:
+        :type end : ``string``
+        """
+        _raw = kwargs.get("_raw", "")
+
+        req_body = {
+             "_raw": _raw,
+             "pattern":pattern
+        }
+
+        return self.get_regexp_check_by_body(req_body)
+
 
 
 def encode_json(data):
